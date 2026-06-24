@@ -2,6 +2,11 @@
 
 A noughts & crosses skill bet on Stacks. Stake STX, beat the bot, double or triple your stake. Every game is escrowed and settled on-chain, and a stake can always be reclaimed if it is never settled.
 
+## Live
+
+- App: https://satto-rust.vercel.app
+- Contract: `SPKWZPPWPXA1BXM40JQ8R42M86KM2FEXXRT00X12.satto-arcade` on Stacks mainnet
+
 ## How it works
 
 1. The player stakes STX into the `satto-arcade` contract to open a game.
