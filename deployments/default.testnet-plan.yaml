@@ -1,0 +1,18 @@
+---
+id: 0
+name: Testnet deployment
+network: testnet
+stacks-node: "https://api.testnet.hiro.so"
+bitcoin-node: "http://blockstack:blockstacksystem@bitcoind.testnet.stacks.co:18332"
+plan:
+  batches:
+    - id: 0
+      transactions:
+        - contract-publish:
+            contract-name: satto-arcade
+            expected-sender: ST2JXQCZ4T5CNC5S0BT4B5J13RBK8JRA867VG2VJZ
+            cost: 86910
+            path: "contracts\\satto-arcade.clar"
+            anchor-block-only: true
+            clarity-version: 3
+      epoch: "3.2"

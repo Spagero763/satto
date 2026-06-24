@@ -1,0 +1,18 @@
+---
+id: 0
+name: Mainnet deployment
+network: mainnet
+stacks-node: "https://api.hiro.so"
+bitcoin-node: "http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332"
+plan:
+  batches:
+    - id: 0
+      transactions:
+        - contract-publish:
+            contract-name: satto-arcade
+            expected-sender: SPKWZPPWPXA1BXM40JQ8R42M86KM2FEXXRT00X12
+            cost: 525188
+            path: "contracts\\satto-arcade.clar"
+            anchor-block-only: true
+            clarity-version: 3
+      epoch: "3.2"
