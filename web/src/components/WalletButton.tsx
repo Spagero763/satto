@@ -16,12 +16,12 @@ export default function WalletButton({ address, busy, onConnect, onDisconnect }:
     return (
       <button
         onClick={onDisconnect}
-        className="glass group flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium transition-colors hover:border-white/20"
+        className="surface surface-hover group flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium transition-colors"
         title="Disconnect"
       >
-        <span className="h-2 w-2 rounded-full bg-teal" />
-        <span className="tabular-nums">{shortAddress(address)}</span>
-        <LogOut className="h-3.5 w-3.5 opacity-50 group-hover:opacity-100" />
+        <span className="h-1.5 w-1.5 rounded-full bg-teal shadow-[0_0_8px_var(--teal)]" />
+        <span className="mono">{shortAddress(address)}</span>
+        <LogOut className="h-3.5 w-3.5 opacity-40 group-hover:opacity-90" />
       </button>
     );
   }
@@ -31,7 +31,7 @@ export default function WalletButton({ address, busy, onConnect, onDisconnect }:
       whileTap={{ scale: 0.96 }}
       disabled={busy}
       onClick={onConnect}
-      className="flex items-center gap-2 rounded-full bg-violet px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet/30 transition disabled:opacity-60"
+      className="flex items-center gap-2 rounded-full bg-bone px-4 py-2 text-sm font-semibold text-bg transition hover:bg-white disabled:opacity-60"
     >
       <Wallet className="h-4 w-4" />
       {busy ? "Connecting…" : "Connect wallet"}

@@ -16,10 +16,10 @@ export default function TopBar({ address, connecting, onConnect, onDisconnect }:
   return (
     <header className="flex items-center justify-between gap-3 px-5 py-4 sm:px-8">
       <div className="flex items-center gap-2.5">
-        <Image src="/logo.svg" alt="Satto" width={36} height={36} priority />
-        <span className="text-lg font-bold tracking-tight">Satto</span>
-        <span className="glass ml-1 hidden rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-teal sm:inline">
-          Stacks {SATTO_NETWORK}
+        <Image src="/logo.svg" alt="Satto" width={34} height={34} priority />
+        <span className="font-display text-lg font-bold tracking-tight">Satto</span>
+        <span className="mono ml-1 hidden rounded-full border border-[var(--hair)] px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-teal sm:inline">
+          {SATTO_NETWORK}
         </span>
       </div>
       <div className="flex items-center gap-2.5">
