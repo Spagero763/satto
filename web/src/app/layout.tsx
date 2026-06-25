@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { WalletProvider } from "@/components/WalletProvider";
+import Background from "@/components/Background";
+import SiteHeader from "@/components/site/SiteHeader";
+import SiteFooter from "@/components/site/SiteFooter";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -39,7 +43,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <WalletProvider>
+          <Background />
+          <div className="grain flex min-h-dvh flex-col">
+            <SiteHeader />
+            <main className="flex-1">{children}</main>
+            <SiteFooter />
+          </div>
+        </WalletProvider>
+      </body>
     </html>
   );
 }

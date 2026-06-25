@@ -1,26 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
+import { Trophy, ArrowUpRight } from "lucide-react";
 import type { Board as BoardT } from "@/lib/engine";
-import type { ModeConfig } from "@/lib/modes";
-import {
-  connectWallet,
-  disconnectWallet,
-  getStxAddress,
-  newGameId,
-  stakeOnChain,
-} from "@/lib/stacks";
+import { MODE_LIST, type ModeConfig } from "@/lib/modes";
+import { newGameId, stakeOnChain } from "@/lib/stacks";
 import { SATTO_NETWORK } from "@/lib/contract";
-import Background from "./Background";
-import TopBar from "./TopBar";
-import Footer from "./Footer";
-import Home from "./Home";
+import { useWallet } from "@/components/WalletProvider";
+import { sfx } from "@/lib/audio";
+import ModeCard from "./ModeCard";
 import GameScreen from "./GameScreen";
-import LeaderboardView from "./LeaderboardView";
 import ResultOverlay, { type GameResult } from "./ResultOverlay";
 
-type Screen = "home" | "game" | "leaderboard";
+type Screen = "lobby" | "game";
 type SettleStatus = "idle" | "pending" | "done" | "error";
 
 const API_BASE = `https://api.${SATTO_NETWORK}.hiro.so`;
@@ -41,10 +35,9 @@ async function waitForTx(txid: string, tries = 40): Promise<boolean> {
   return false;
 }
 
-export default function SattoApp() {
-  const [address, setAddress] = useState<string | null>(null);
-  const [connecting, setConnecting] = useState(false);
-  const [screen, setScreen] = useState<Screen>("home");
+export default function PlayApp() {
+  const { address, connecting, connect } = useWallet();
+  const [screen, setScreen] = useState<Screen>("lobby");
   const [mode, setMode] = useState<ModeConfig | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -57,46 +50,21 @@ export default function SattoApp() {
   const [settleTxid, setSettleTxid] = useState<string | null>(null);
   const [settleError, setSettleError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setAddress(getStxAddress());
-  }, []);
-
-  const flash = useCallback((msg: string) => {
+  function flash(msg: string) {
     setToast(msg);
     setTimeout(() => setToast(null), 4000);
-  }, []);
-
-  async function handleConnect() {
-    setConnecting(true);
-    try {
-      const addr = await connectWallet();
-      setAddress(addr);
-    } catch {
-      flash("Could not connect a wallet.");
-    } finally {
-      setConnecting(false);
-    }
-  }
-
-  function handleDisconnect() {
-    disconnectWallet();
-    setAddress(null);
-    setScreen("home");
   }
 
   async function handleSelect(m: ModeConfig) {
     if (!address) {
       flash("Connect a wallet first.");
+      connect();
       return;
     }
+    sfx.click();
     const id = newGameId();
     try {
-      const txid = await stakeOnChain({
-        gameId: id,
-        modeIndex: m.modeIndex,
-        amountMicro: m.stakeMicro,
-        sender: address,
-      });
+      const txid = await stakeOnChain({ gameId: id, modeIndex: m.modeIndex, amountMicro: m.stakeMicro, sender: address });
       setMode(m);
       setGameId(id);
       setStakeTxid(txid);
@@ -125,13 +93,7 @@ export default function SattoApp() {
         const r = await fetch("/api/settle", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            gameId,
-            mode: mode.id,
-            board,
-            outcome: res,
-            player: address,
-          }),
+          body: JSON.stringify({ gameId, mode: mode.id, board, outcome: res, player: address }),
         });
         const j = await r.json();
         if (r.ok) {
@@ -161,47 +123,52 @@ export default function SattoApp() {
 
   function playAgain() {
     setResult(null);
-    setScreen("home");
+    setScreen("lobby");
     setMode(null);
     setGameId(null);
     setStakeTxid(null);
   }
 
   return (
-    <div className="grain flex min-h-dvh flex-col">
-      <Background />
-      <TopBar
-        address={address}
-        connecting={connecting}
-        onConnect={handleConnect}
-        onDisconnect={handleDisconnect}
-      />
+    <div className="flex flex-col items-center py-10">
+      <AnimatePresence mode="wait">
+        {screen === "lobby" ? (
+          <motion.div
+            key="lobby"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mx-auto w-full max-w-3xl px-5 sm:px-8"
+          >
+            <div className="mono flex items-center gap-3 text-[11px] uppercase tracking-[0.22em] text-faint">
+              <span className="h-px w-7 bg-[var(--hair)]" /> Choose your mode
+            </div>
+            <h1 className="font-display mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
+              Pick a stake. <span className="text-teal">Beat the bot.</span>
+            </h1>
+            <p className="mt-3 max-w-md text-[15px] text-dim">
+              Your STX is escrowed the moment you stake. Win and the house pays you out.
+            </p>
 
-      <main className="flex flex-1 items-center justify-center py-6">
-        <AnimatePresence mode="wait">
-          {screen === "home" && (
-            <motion.div
-              key="home"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full"
-            >
-              <Home connected={!!address} onSelect={handleSelect} onLeaderboard={() => setScreen("leaderboard")} />
-            </motion.div>
-          )}
-          {screen === "leaderboard" && (
-            <motion.div
-              key="leaderboard"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full"
-            >
-              <LeaderboardView me={address} onHome={() => setScreen("home")} />
-            </motion.div>
-          )}
-          {screen === "game" && mode && (
+            <div className="mt-9 grid gap-4 sm:grid-cols-2">
+              {MODE_LIST.map((m, i) => (
+                <ModeCard key={m.id} mode={m} index={i} disabled={connecting} onSelect={() => handleSelect(m)} />
+              ))}
+            </div>
+
+            <div className="mt-5 flex items-center justify-between">
+              <Link
+                href="/leaderboard"
+                className="surface surface-hover group inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-dim transition-colors hover:text-bone"
+              >
+                <Trophy className="h-4 w-4 text-teal" /> Leaderboard
+                <ArrowUpRight className="h-3.5 w-3.5 opacity-50 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+              {!address && <p className="mono text-[11px] uppercase tracking-wider text-faint">Connect to play</p>}
+            </div>
+          </motion.div>
+        ) : (
+          mode && (
             <motion.div
               key="game"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -217,11 +184,9 @@ export default function SattoApp() {
                 onExit={playAgain}
               />
             </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
-
-      <Footer />
+          )
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {result && (
