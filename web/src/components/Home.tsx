@@ -1,16 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, Coins, Bitcoin } from "lucide-react";
+import { ShieldCheck, Coins, Bitcoin, Trophy } from "lucide-react";
 import { MODE_LIST, type ModeConfig } from "@/lib/modes";
 import ModeCard from "./ModeCard";
 
 interface Props {
   connected: boolean;
   onSelect: (mode: ModeConfig) => void;
+  onLeaderboard: () => void;
 }
 
-export default function Home({ connected, onSelect }: Props) {
+export default function Home({ connected, onSelect, onLeaderboard }: Props) {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center px-5 pb-10 text-center">
       <motion.div
@@ -41,8 +42,15 @@ export default function Home({ connected, onSelect }: Props) {
         ))}
       </div>
 
+      <button
+        onClick={onLeaderboard}
+        className="glass mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white/70 transition-colors hover:text-white"
+      >
+        <Trophy className="h-4 w-4 text-teal" /> View leaderboard
+      </button>
+
       {!connected && (
-        <p className="mt-5 text-sm text-white/40">Connect a Stacks wallet to stake and play.</p>
+        <p className="mt-4 text-sm text-white/40">Connect a Stacks wallet to stake and play.</p>
       )}
 
       <div className="mt-9 grid w-full grid-cols-3 gap-3 text-left">

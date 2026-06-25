@@ -17,9 +17,10 @@ import TopBar from "./TopBar";
 import Footer from "./Footer";
 import Home from "./Home";
 import GameScreen from "./GameScreen";
+import LeaderboardView from "./LeaderboardView";
 import ResultOverlay, { type GameResult } from "./ResultOverlay";
 
-type Screen = "home" | "game";
+type Screen = "home" | "game" | "leaderboard";
 type SettleStatus = "idle" | "pending" | "done" | "error";
 
 const API_BASE = `https://api.${SATTO_NETWORK}.hiro.so`;
@@ -178,7 +179,7 @@ export default function SattoApp() {
 
       <main className="flex flex-1 items-center justify-center py-6">
         <AnimatePresence mode="wait">
-          {screen === "home" ? (
+          {screen === "home" && (
             <motion.div
               key="home"
               initial={{ opacity: 0 }}
@@ -186,26 +187,36 @@ export default function SattoApp() {
               exit={{ opacity: 0 }}
               className="w-full"
             >
-              <Home connected={!!address} onSelect={handleSelect} />
+              <Home connected={!!address} onSelect={handleSelect} onLeaderboard={() => setScreen("leaderboard")} />
             </motion.div>
-          ) : (
-            mode && (
-              <motion.div
-                key="game"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="w-full"
-              >
-                <GameScreen
-                  mode={mode}
-                  stakeTxid={stakeTxid}
-                  stakeConfirmed={stakeConfirmed}
-                  onResult={handleResult}
-                  onExit={playAgain}
-                />
-              </motion.div>
-            )
+          )}
+          {screen === "leaderboard" && (
+            <motion.div
+              key="leaderboard"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full"
+            >
+              <LeaderboardView me={address} onHome={() => setScreen("home")} />
+            </motion.div>
+          )}
+          {screen === "game" && mode && (
+            <motion.div
+              key="game"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full"
+            >
+              <GameScreen
+                mode={mode}
+                stakeTxid={stakeTxid}
+                stakeConfirmed={stakeConfirmed}
+                onResult={handleResult}
+                onExit={playAgain}
+              />
+            </motion.div>
           )}
         </AnimatePresence>
       </main>
