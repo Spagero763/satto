@@ -1,5 +1,7 @@
 # Satto
 
+[![CI](https://github.com/Spagero763/satto/actions/workflows/ci.yml/badge.svg)](https://github.com/Spagero763/satto/actions/workflows/ci.yml)
+
 A noughts & crosses skill bet on Stacks. Stake STX, beat the bot, double or triple your stake. Every game is escrowed and settled on-chain, and a stake can always be reclaimed if it is never settled.
 
 ## Live
