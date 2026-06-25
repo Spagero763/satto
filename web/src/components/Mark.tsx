@@ -5,7 +5,7 @@ import type { Cell } from "@/lib/engine";
 
 export default function Mark({ value }: { value: Cell }) {
   if (!value) return null;
-  const stroke = value === "X" ? "#8b5cf6" : "#2dd4bf";
+  const stroke = value === "X" ? "#9b7bff" : "#2ee6b0";
 
   if (value === "X") {
     return (

@@ -24,13 +24,12 @@ export default function Board({ board, winningLine, disabled, onPlay }: Props) {
             type="button"
             disabled={!playable}
             onClick={() => onPlay(i)}
-            whileTap={playable ? { scale: 0.92 } : undefined}
+            whileTap={playable ? { scale: 0.9 } : undefined}
             whileHover={playable ? { scale: 1.03 } : undefined}
             className={cn(
-              "relative flex aspect-square w-[5.4rem] items-center justify-center rounded-2xl sm:w-24",
-              "glass transition-colors",
-              playable ? "cursor-pointer hover:border-white/20" : "cursor-default",
-              inLine && "glow-violet border-violet/50"
+              "surface relative flex aspect-square w-[5.4rem] items-center justify-center rounded-2xl sm:w-24",
+              playable ? "surface-hover cursor-pointer" : "cursor-default",
+              inLine && "border-teal/60 bg-teal/10 shadow-[0_0_30px_-6px_var(--teal)]"
             )}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}

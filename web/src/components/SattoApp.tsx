@@ -168,7 +168,7 @@ export default function SattoApp() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="grain flex min-h-dvh flex-col">
       <Background />
       <TopBar
         address={address}
@@ -242,7 +242,7 @@ export default function SattoApp() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="glass fixed bottom-5 left-1/2 z-40 -translate-x-1/2 rounded-full px-4 py-2 text-sm"
+            className="surface mono fixed bottom-5 left-1/2 z-40 -translate-x-1/2 rounded-full px-4 py-2 text-[13px]"
           >
             {toast}
           </motion.div>

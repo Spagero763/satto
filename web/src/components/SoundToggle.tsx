@@ -15,10 +15,10 @@ export default function SoundToggle() {
         set(next);
         setMuted(next);
       }}
-      className="glass flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:border-white/20"
+      className="surface surface-hover flex h-9 w-9 items-center justify-center rounded-full transition-colors"
       title={muted ? "Unmute" : "Mute"}
     >
-      {muted ? <VolumeX className="h-4 w-4 opacity-70" /> : <Volume2 className="h-4 w-4 opacity-70" />}
+      {muted ? <VolumeX className="h-4 w-4 text-faint" /> : <Volume2 className="h-4 w-4 text-dim" />}
     </button>
   );
 }

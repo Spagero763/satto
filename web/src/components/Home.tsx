@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, Coins, Bitcoin, Trophy } from "lucide-react";
+import { Trophy, ArrowUpRight } from "lucide-react";
 import { MODE_LIST, type ModeConfig } from "@/lib/modes";
 import ModeCard from "./ModeCard";
 
@@ -11,58 +11,69 @@ interface Props {
   onLeaderboard: () => void;
 }
 
+const GUARANTEES = [
+  ["01", "Real stake", "Your STX sits in escrow while you play."],
+  ["02", "Never frozen", "Unsettled? Reclaim your stake on-chain."],
+  ["03", "Bitcoin-secured", "Final on Stacks, anchored to Bitcoin."],
+];
+
 export default function Home({ connected, onSelect, onLeaderboard }: Props) {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col items-center px-5 pb-10 text-center">
+    <div className="mx-auto flex w-full max-w-3xl flex-col px-5 pb-12 sm:px-8">
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col items-center"
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        <span className="glass mb-5 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-teal">
-          <Bitcoin className="h-3.5 w-3.5" /> Settled on Stacks
-        </span>
-        <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl">
-          Outplay the machine.
+        <div className="mono flex items-center gap-3 text-[11px] uppercase tracking-[0.22em] text-faint">
+          <span className="h-px w-7 bg-[var(--hair)]" />
+          Noughts &amp; Crosses · Stacks
+        </div>
+
+        <h1 className="font-display mt-5 text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-7xl">
+          Outplay the
           <br />
-          <span className="bg-gradient-to-r from-violet to-teal bg-clip-text text-transparent">
-            Keep the winnings.
-          </span>
+          machine. <span className="text-teal">Keep</span>
+          <br />
+          <span className="text-stroke">the winnings.</span>
         </h1>
-        <p className="mt-4 max-w-md text-balance text-white/55">
-          Stake STX on a game of noughts &amp; crosses. The bot is sharp but beatable —
+
+        <p className="mt-6 max-w-md text-[15px] leading-relaxed text-dim">
+          Stake STX on a round of noughts &amp; crosses. The bot is sharp but beatable —
           win and double or triple your stake, settled trustlessly on-chain.
         </p>
       </motion.div>
 
-      <div className="mt-9 grid w-full gap-4 sm:grid-cols-2">
-        {MODE_LIST.map((mode) => (
-          <ModeCard key={mode.id} mode={mode} disabled={!connected} onSelect={() => onSelect(mode)} />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+        className="mt-10 grid gap-4 sm:grid-cols-2"
+      >
+        {MODE_LIST.map((mode, i) => (
+          <ModeCard key={mode.id} mode={mode} index={i} disabled={!connected} onSelect={() => onSelect(mode)} />
         ))}
+      </motion.div>
+
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <button
+          onClick={onLeaderboard}
+          className="surface surface-hover group inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-dim transition-colors hover:text-bone"
+        >
+          <Trophy className="h-4 w-4 text-teal" /> Leaderboard
+          <ArrowUpRight className="h-3.5 w-3.5 opacity-50 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </button>
+        {!connected && (
+          <p className="mono text-[11px] uppercase tracking-wider text-faint">Connect to play</p>
+        )}
       </div>
 
-      <button
-        onClick={onLeaderboard}
-        className="glass mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white/70 transition-colors hover:text-white"
-      >
-        <Trophy className="h-4 w-4 text-teal" /> View leaderboard
-      </button>
-
-      {!connected && (
-        <p className="mt-4 text-sm text-white/40">Connect a Stacks wallet to stake and play.</p>
-      )}
-
-      <div className="mt-9 grid w-full grid-cols-3 gap-3 text-left">
-        {[
-          { icon: Coins, title: "Real stake", body: "Your STX is escrowed while you play." },
-          { icon: ShieldCheck, title: "Never frozen", body: "Reclaim your stake if it isn't settled." },
-          { icon: Bitcoin, title: "Bitcoin-secured", body: "Final on Stacks, anchored to Bitcoin." },
-        ].map(({ icon: Icon, title, body }) => (
-          <div key={title} className="glass rounded-2xl p-3.5">
-            <Icon className="h-4 w-4 text-violet" />
-            <p className="mt-2 text-sm font-semibold">{title}</p>
-            <p className="mt-0.5 text-xs text-white/45">{body}</p>
+      <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[var(--hair)] bg-[var(--hair)] sm:grid-cols-3">
+        {GUARANTEES.map(([n, title, body]) => (
+          <div key={n} className="bg-bg p-5">
+            <span className="mono text-[11px] text-teal">{n}</span>
+            <p className="font-display mt-2 text-base font-semibold">{title}</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-faint">{body}</p>
           </div>
         ))}
       </div>

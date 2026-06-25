@@ -1,50 +1,88 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #07070b;
-  --panel: #0e0e16;
-  --violet: #8b5cf6;
-  --teal: #2dd4bf;
+  --bg: #08080a;
+  --bg-raise: #0d0d11;
+  --bone: #f3f1e9;
+  --dim: #9a9aa4;
+  --faint: #5e5e68;
+  --hair: rgba(243, 241, 233, 0.1);
+  --teal: #2ee6b0;
+  --violet: #9b7bff;
+  --amber: #f4a64b;
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-panel: var(--panel);
-  --color-violet: var(--violet);
+  --color-bg-raise: var(--bg-raise);
+  --color-bone: var(--bone);
+  --color-dim: var(--dim);
+  --color-faint: var(--faint);
   --color-teal: var(--teal);
+  --color-violet: var(--violet);
+  --color-amber: var(--amber);
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
-
-html,
-body {
-  background: var(--bg);
-  color: #f5f5f7;
-  -webkit-font-smoothing: antialiased;
-  font-family: var(--font-sans);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
+body {
+  background: var(--bg);
+  color: var(--bone);
+  -webkit-font-smoothing: antialiased;
+  font-family: var(--font-sans);
+}
+
 ::selection {
-  background: rgba(139, 92, 246, 0.35);
+  background: var(--teal);
+  color: #04140f;
 }
 
-.glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
-.glow-violet {
-  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3), 0 18px 60px -20px rgba(139, 92, 246, 0.55);
-}
-.glow-teal {
-  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.3), 0 18px 60px -20px rgba(45, 212, 191, 0.5);
+.mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1;
 }
 
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-24px) scale(1.05); }
+.hair {
+  border: 1px solid var(--hair);
+}
+
+.surface {
+  background: linear-gradient(180deg, rgba(243, 241, 233, 0.035), rgba(243, 241, 233, 0.012));
+  border: 1px solid var(--hair);
+}
+
+.surface-hover:hover {
+  border-color: rgba(243, 241, 233, 0.22);
+  background: linear-gradient(180deg, rgba(243, 241, 233, 0.06), rgba(243, 241, 233, 0.02));
+}
+
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px var(--hair);
+  color: transparent;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(0, -18px); }
 }

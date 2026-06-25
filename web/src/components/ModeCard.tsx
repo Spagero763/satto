@@ -1,18 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Zap, Flame } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { ModeConfig } from "@/lib/modes";
 import { formatStx } from "@/lib/contract";
 import { cn } from "@/lib/cn";
 
 interface Props {
   mode: ModeConfig;
+  index: number;
   disabled?: boolean;
   onSelect: () => void;
 }
 
-export default function ModeCard({ mode, disabled, onSelect }: Props) {
+export default function ModeCard({ mode, index, disabled, onSelect }: Props) {
   const isHard = mode.id === "hard";
 
   return (
@@ -20,46 +21,56 @@ export default function ModeCard({ mode, disabled, onSelect }: Props) {
       type="button"
       disabled={disabled}
       onClick={onSelect}
-      whileHover={disabled ? undefined : { y: -4 }}
-      whileTap={disabled ? undefined : { scale: 0.98 }}
+      whileHover={disabled ? undefined : { y: -3 }}
+      whileTap={disabled ? undefined : { scale: 0.99 }}
+      transition={{ type: "spring", stiffness: 400, damping: 28 }}
       className={cn(
-        "glass group relative flex w-full flex-col gap-3 rounded-3xl p-6 text-left transition-all",
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
-        !disabled && (isHard ? "hover:glow-teal" : "hover:glow-violet")
+        "surface group relative flex flex-col overflow-hidden rounded-2xl p-6 text-left",
+        disabled ? "cursor-not-allowed opacity-45" : "surface-hover cursor-pointer"
       )}
     >
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute -right-6 -top-8 text-[7rem] font-extrabold leading-none opacity-[0.07] transition-opacity group-hover:opacity-[0.12]",
+          "font-display",
+          isHard ? "text-teal" : "text-violet"
+        )}
+      >
+        {isHard ? "○" : "✕"}
+      </div>
+
       <div className="flex items-center justify-between">
-        <span
-          className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-2xl",
-            isHard ? "bg-teal/15 text-teal" : "bg-violet/15 text-violet"
-          )}
-        >
-          {isHard ? <Flame className="h-5 w-5" /> : <Zap className="h-5 w-5" />}
+        <span className="mono text-[11px] uppercase tracking-[0.2em] text-faint">
+          0{index + 1} / {mode.name}
         </span>
         <span
           className={cn(
-            "rounded-full px-2.5 py-1 text-xs font-bold",
-            isHard ? "bg-teal/15 text-teal" : "bg-violet/15 text-violet"
+            "mono rounded-full px-2.5 py-1 text-xs font-bold",
+            isHard ? "bg-teal/12 text-teal" : "bg-violet/12 text-violet"
           )}
         >
-          {mode.payout}× payout
+          {mode.payout}×
         </span>
       </div>
 
-      <div>
-        <div className="flex items-baseline gap-2">
-          <h3 className="text-xl font-bold">{mode.name}</h3>
-          <span className="text-xs uppercase tracking-wider text-white/40">{mode.tagline}</span>
+      <h3 className="font-display mt-5 text-2xl font-bold">{mode.tagline}</h3>
+      <p className="mt-1.5 text-[13px] leading-relaxed text-dim">{mode.blurb}</p>
+
+      <div className="mt-5 flex items-end justify-between border-t border-[var(--hair)] pt-4">
+        <div>
+          <p className="mono text-[10px] uppercase tracking-wider text-faint">Stake</p>
+          <p className="mono mt-0.5 text-sm font-semibold text-bone">{formatStx(mode.stakeMicro)} STX</p>
         </div>
-        <p className="mt-1 text-sm text-white/55">{mode.blurb}</p>
-      </div>
-
-      <div className="mt-1 flex items-center justify-between border-t border-white/5 pt-3 text-sm">
-        <span className="text-white/45">
-          Stake <span className="font-semibold text-white/80">{formatStx(mode.stakeMicro)} STX</span>
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 text-sm font-semibold",
+            isHard ? "text-teal" : "text-violet"
+          )}
+        >
+          {mode.blunderHint}
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </span>
-        <span className={cn("font-medium", isHard ? "text-teal" : "text-violet")}>{mode.blunderHint}</span>
       </div>
     </motion.button>
   );

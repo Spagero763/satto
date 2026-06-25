@@ -73,19 +73,19 @@ export default function GameScreen({ mode, stakeTxid, stakeConfirmed, onResult, 
       <div className="flex w-full items-center justify-between">
         <button
           onClick={onExit}
-          className="glass flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-white/60 transition-colors hover:text-white"
+          className="surface surface-hover flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-dim transition-colors hover:text-bone"
         >
           <ArrowLeft className="h-4 w-4" /> Forfeit
         </button>
         <div className="text-right">
-          <p className="text-sm font-semibold">{mode.name}</p>
-          <p className="text-xs text-white/45">
-            {formatStx(mode.stakeMicro)} STX · {mode.payout}× on a win
+          <p className="font-display text-sm font-semibold">{mode.name}</p>
+          <p className="mono text-[11px] text-faint">
+            {formatStx(mode.stakeMicro)} STX · {mode.payout}× win
           </p>
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <Board board={board} winningLine={winningLine} disabled={turn !== "human" || finished.current} onPlay={play} />
       </div>
 
@@ -93,9 +93,9 @@ export default function GameScreen({ mode, stakeTxid, stakeConfirmed, onResult, 
         key={turn}
         initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mt-6 text-sm font-medium text-white/55"
+        className="mono mt-7 text-[12px] uppercase tracking-[0.18em] text-dim"
       >
-        {finished.current ? "Game over" : turn === "human" ? "Your move — you are X" : "The machine is thinking…"}
+        {finished.current ? "Game over" : turn === "human" ? "Your move — you are ✕" : "Machine thinking…"}
       </motion.p>
 
       {stakeTxid && (
@@ -103,11 +103,11 @@ export default function GameScreen({ mode, stakeTxid, stakeConfirmed, onResult, 
           href={txUrl(stakeTxid)}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70"
+          className="mono mt-3 inline-flex items-center gap-1.5 text-[11px] text-faint hover:text-dim"
         >
           {stakeConfirmed ? (
             <>
-              <CheckCircle2 className="h-3.5 w-3.5 text-teal" /> Stake confirmed on-chain
+              <CheckCircle2 className="h-3.5 w-3.5 text-teal" /> Stake confirmed
             </>
           ) : (
             <>
