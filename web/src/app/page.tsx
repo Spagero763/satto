@@ -1,5 +1,5 @@
-import SattoApp from "@/components/SattoApp";
+import Landing from "@/components/marketing/Landing";
 
 export default function Page() {
-  return <SattoApp />;
+  return <Landing />;
 }
